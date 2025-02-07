@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Paste your link</h1>
-    <UInput v-model="link" />
+    <UInput v-model="link" @keyup.enter="convert" @paste="onPaste" />
     <p>
       <UToggle v-model="redirect" />
       <span>Auto redirect <span class="text-xs italic">when pasting detected</span></span>
@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick } from 'vue'
+
 const link = ref('')
 const redirect = ref(true)
 const newTab = ref(false)
@@ -36,6 +38,14 @@ function isUrlValid(str: string): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+function onPaste(event: Event) {
+  if (redirect.value) {
+    nextTick(() => {
+      convert()
+    })
   }
 }
 
