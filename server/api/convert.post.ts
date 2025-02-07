@@ -10,9 +10,14 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    //call deezer API https://api.deezer.com/search/track/?q=eminem&index=0&limit=1
+    //const response = await fetch(`https://api.deezer.com/search/track/?q=${url}&index=0&limit=1`)
+    const response = await fetch(`https://api.deezer.com/search/track/?q=eminem&index=0&limit=1`)
+    const data = await response.json()
+    const track = data.data[0]
     return {
       originalUrl: url,
-      redirectUrl: `https://your-domain.com/${Math.random().toString(36).substr(2, 6)}`
+      redirectUrl: track.link
     }
   } catch (error) {
     throw createError({

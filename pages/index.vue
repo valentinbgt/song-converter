@@ -4,7 +4,11 @@
     <UInput v-model="link" @keyup.enter="convert" @paste="onPaste" />
     <p>
       <UToggle v-model="redirect" />
-      <span>Auto redirect <span class="text-xs italic">when pasting detected</span></span>
+      <span>Auto redirect</span>
+    </p>
+    <p>
+      <UToggle v-model="convertOnPaste" />
+      <span>Convert on pasting</span>
     </p>
     <p>
       <UToggle v-model="newTab" />
@@ -23,6 +27,7 @@ import { nextTick } from 'vue'
 
 const link = ref('')
 const redirect = ref(true)
+const convertOnPaste = ref(true)
 const newTab = ref(false)
 const loading = ref(false)
 
@@ -42,7 +47,7 @@ function isUrlValid(str: string): boolean {
 }
 
 function onPaste(event: Event) {
-  if (redirect.value) {
+  if (convertOnPaste.value) {
     nextTick(() => {
       convert()
     })
@@ -54,12 +59,16 @@ async function convert() {
 
   loading.value = true
   try {
-    result.value = await $fetch('/api/convert', {
+    result.value = await $fetch<ConvertResult>('/api/convert', {
       method: 'POST',
       body: {
         url: link.value
       }
     })
+    
+    if (redirect.value && result.value.redirectUrl) {
+      window.location.href = result.value.redirectUrl
+    }
   } catch (error) {
     console.error('Error converting URL:', error)
   } finally {
