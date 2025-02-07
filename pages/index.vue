@@ -40,12 +40,32 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick } from "vue";
+import { nextTick, ref, watch, onMounted } from "vue";
 
 const link = ref("");
+
 const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
+
+onMounted(() => {
+  redirect.value = localStorage.getItem('redirect') !== 'false';
+  convertOnPaste.value = localStorage.getItem('convertOnPaste') !== 'false';
+  newTab.value = localStorage.getItem('newTab') === 'true';
+
+  watch(redirect, (newValue) => {
+    localStorage.setItem('redirect', newValue.toString());
+  });
+
+  watch(convertOnPaste, (newValue) => {
+    localStorage.setItem('convertOnPaste', newValue.toString());
+  });
+
+  watch(newTab, (newValue) => {
+    localStorage.setItem('newTab', newValue.toString());
+  });
+});
+
 const loading = ref(false);
 
 interface ConvertResult {
