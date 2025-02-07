@@ -14,28 +14,30 @@
       <UToggle v-model="newTab" />
       <span>Open in new tab</span>
     </p>
-    <UButton :disabled="!isUrlValid(link)" :loading="loading" @click="convert">Convert</UButton>
+    <UButton :disabled="!isUrlValid(link)" :loading="loading" @click="convert"
+      >Convert</UButton
+    >
   </div>
 
   <div v-if="result.redirectUrl">
     <p>{{ result.redirectUrl }}</p>
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick } from 'vue'
+import { nextTick } from "vue";
 
-const link = ref('')
-const redirect = ref(true)
-const convertOnPaste = ref(true)
-const newTab = ref(false)
-const loading = ref(false)
+const link = ref("");
+const redirect = ref(true);
+const convertOnPaste = ref(true);
+const newTab = ref(false);
+const loading = ref(false);
 
 interface ConvertResult {
-  redirectUrl?: string
+  redirectUrl?: string;
 }
 
-const result = ref<ConvertResult>({})
+const result = ref<ConvertResult>({});
 
 function isUrlValid(str: string): boolean {
   try {
@@ -49,30 +51,30 @@ function isUrlValid(str: string): boolean {
 function onPaste(event: Event) {
   if (convertOnPaste.value) {
     nextTick(() => {
-      convert()
-    })
+      convert();
+    });
   }
 }
 
 async function convert() {
-  if (!isUrlValid(link.value)) return
+  if (!isUrlValid(link.value)) return;
 
-  loading.value = true
+  loading.value = true;
   try {
-    result.value = await $fetch<ConvertResult>('/api/convert', {
-      method: 'POST',
+    result.value = await $fetch<ConvertResult>("/api/convert", {
+      method: "POST",
       body: {
-        url: link.value
-      }
-    })
-    
+        url: link.value,
+      },
+    });
+
     if (redirect.value && result.value.redirectUrl) {
-      window.location.href = result.value.redirectUrl
+      window.location.href = result.value.redirectUrl;
     }
   } catch (error) {
-    console.error('Error converting URL:', error)
+    console.error("Error converting URL:", error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
