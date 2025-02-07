@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   try {
     return {
       originalUrl: url,
-      shortUrl: `https://your-domain.com/${Math.random().toString(36).substr(2, 6)}`
+      redirectUrl: `https://your-domain.com/${Math.random().toString(36).substr(2, 6)}`
     }
   } catch (error) {
     throw createError({
