@@ -69,7 +69,11 @@ async function convert() {
     });
 
     if (redirect.value && result.value.redirectUrl) {
-      window.location.href = result.value.redirectUrl;
+      if (newTab.value) {
+        window.open(result.value.redirectUrl, "_blank");
+      } else {
+        window.location.href = result.value.redirectUrl;
+      }
     }
   } catch (error) {
     console.error("Error converting URL:", error);
