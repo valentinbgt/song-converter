@@ -5,14 +5,24 @@
     <p>
       <UToggle v-model="redirect" />
       <span>Auto redirect</span>
+      <UTooltip text="Automatically open the title on the target platform when match found." :popper="{ placement: 'right' }">
+        <UKbd>?</UKbd>
+      </UTooltip>
+
     </p>
     <p>
       <UToggle v-model="convertOnPaste" />
       <span>Convert on pasting</span>
+      <UTooltip text="Convert the link when pasting detected." :popper="{ placement: 'right' }">
+        <UKbd>?</UKbd>
+      </UTooltip>
     </p>
     <p>
       <UToggle v-model="newTab" />
       <span>Open in new tab</span>
+      <UTooltip text="Open the title in a new tab." :popper="{ placement: 'right' }">
+        <UKbd>?</UKbd>
+      </UTooltip>
     </p>
     <UButton :disabled="!isUrlValid(link)" :loading="loading" @click="convert"
       >Convert</UButton
