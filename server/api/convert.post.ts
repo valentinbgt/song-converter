@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const trackName = await getSpotifyTrackName(url);
+    console.log(trackName);
 
     const response = await fetch(
       `https://api.deezer.com/search/track/?q=${encodeURIComponent(
@@ -69,7 +70,8 @@ async function getSpotifyTrackName(url: string) {
   }
 
   const track = await response.json();
-  return track.name;
+  console.log(track);
+  return track.name + ' ' + track.artists[0].name + ' ' + track.album.name;
 }
 
 async function getSpotifyAccessToken() {
