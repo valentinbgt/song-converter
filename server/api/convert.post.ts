@@ -29,9 +29,14 @@ export default defineEventHandler(async (event) => {
     }
 
     const track = data.data[0];
+    //console.log(track);
     return {
       originalUrl: url,
       redirectUrl: track.link,
+      title: track.title,
+      artist: track.artist.name,
+      album: track.album.title,
+      cover: track.album.cover_medium,
     };
   } catch (error) {
     console.error("Detailed error:", error);

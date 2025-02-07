@@ -20,7 +20,12 @@
   </div>
 
   <div v-if="result.redirectUrl">
-    <p>{{ result.redirectUrl }}</p>
+    <p>✅ - Match found</p>
+    <p>{{ result.title }}</p>
+    <p>{{ result.artist }}</p>
+    <p>{{ result.album }}</p>
+    <img :src="result.cover" />
+    <UButton @click="openTitle">Open in Deezer</UButton>
   </div>
 </template>
 
@@ -35,6 +40,10 @@ const loading = ref(false);
 
 interface ConvertResult {
   redirectUrl?: string;
+  title?: string;
+  artist?: string;
+  album?: string;
+  cover?: string;
 }
 
 const result = ref<ConvertResult>({});
@@ -56,6 +65,16 @@ function onPaste(event: Event) {
   }
 }
 
+function openTitle() {
+  if (result.value.redirectUrl) {
+    if (newTab.value) {
+      window.open(result.value.redirectUrl, "_blank");
+    } else {
+      window.location.href = result.value.redirectUrl;
+    }
+  }
+}
+
 async function convert() {
   if (!isUrlValid(link.value)) return;
 
@@ -68,12 +87,8 @@ async function convert() {
       },
     });
 
-    if (redirect.value && result.value.redirectUrl) {
-      if (newTab.value) {
-        window.open(result.value.redirectUrl, "_blank");
-      } else {
-        window.location.href = result.value.redirectUrl;
-      }
+    if (redirect.value) {
+      openTitle();
     }
   } catch (error) {
     console.error("Error converting URL:", error);
