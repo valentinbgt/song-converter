@@ -2,6 +2,7 @@
   <div>
     <h1>Paste your link</h1>
     <UInput v-model="link" @keyup.enter="convert" @paste="onPaste" />
+    <UButton @click="checkClipboard">Check my clipboard</UButton>
     <p>
       <UToggle v-model="redirect" />
       <span>Auto redirect</span>
@@ -103,6 +104,15 @@ function openTitle() {
       window.location.href = result.value.redirectUrl;
     }
   }
+}
+
+function checkClipboard() {
+  navigator.clipboard.readText().then((text) => {
+    if (isUrlValid(text)) {
+      link.value = text;
+      convert();
+    }
+  });
 }
 
 async function convert() {
