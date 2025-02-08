@@ -69,38 +69,47 @@ const platforms = [
   {
     value: "spotify",
     label: "Spotify",
+    disabled: false,
   },
   {
     value: "deezer",
     label: "Deezer",
+    disabled: false,
   },
   {
     value: "applemusic",
     label: "Apple Music",
+    disabled: true,
   },
   {
     value: "youtube",
     label: "YouTube",
+    disabled: true,
   },
   {
     value: "youtubemusic",
     label: "YouTube Music",
+    disabled: true,
   },
   {
     value: "soundcloud",
     label: "SoundCloud",
+    disabled: true,
   },
   {
     value: "tidal",
     label: "Tidal",
+    disabled: true,
   },
   {
     value: "amazonmusic",
     label: "Amazon Music",
+    disabled: true,
   },
   {
     value: "napster",
     label: "Napster",
+    disabled: true,
   },
 ];
 
