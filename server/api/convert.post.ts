@@ -63,6 +63,7 @@ function detectOrgininPlatform(url: string) {
 
   //https://www.deezer.com/track/12345678
   //deezer://track/12345678
+  //https://deezer.page.link/ABCDEFGHIJKLMNOPQ
 
   //https://music.apple.com/us/song/12345678
   //music://song/12345678
@@ -88,6 +89,10 @@ function detectOrgininPlatform(url: string) {
       search: ["spotify", "open.spotify.com", "spotify:track"],
     },
     {
+      platform: "deezer-page-link",
+      search: ["deezer.page.link"],
+    },
+    {
       platform: "deezer",
       search: ["deezer", "deezer.com", "deezer://track"],
     },
@@ -109,6 +114,11 @@ async function getTrackName(url: string, platform: string): Promise<string> {
 
   if (platform === "deezer") {
     return getDeezerTrackName(url);
+  }
+
+  if (platform === "deezer-page-link") {
+    const realUrl = await unshortenURL(url);
+    return getDeezerTrackName(realUrl);
   }
 
   throw createError({
@@ -190,4 +200,9 @@ async function getDeezerTrackName(url: string) {
 
   const data = await response.json();
   return data.title + " " + data.artist.name + " " + data.album.title;
+}
+
+async function unshortenURL(url: string) {
+  const response = await fetch(url);
+  return response.url;
 }
