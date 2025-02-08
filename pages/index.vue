@@ -52,7 +52,7 @@
     <p>{{ result.artist }}</p>
     <p>{{ result.album }}</p>
     <img :src="result.cover" />
-    <UButton @click="openTitle">Open in Deezer</UButton>
+    <UButton @click="openTitle">Open</UButton>
   </div>
 </template>
 
@@ -190,11 +190,12 @@ async function convert() {
 
   loading.value = true;
   try {
+    console.log(selectedPlatform.value);
     result.value = await $fetch<ConvertResult>("/api/convert", {
       method: "POST",
       body: {
         url: link.value,
-        platform: selectedPlatform.value,
+        targetPlatform: selectedPlatform.value,
       },
     });
 

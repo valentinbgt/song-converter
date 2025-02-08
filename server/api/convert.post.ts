@@ -2,7 +2,7 @@ import { errorMessages } from "vue/compiler-sfc";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { url } = body;
+  const { url, targetPlatform } = body;
 
   if (!url) {
     throw createError({
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     console.log(trackName);
 
     //get track info
-    const trackInfo = await getDeezerTrackInfo(trackName);
+    const trackInfo = await getTrackInfo(trackName, targetPlatform);
     console.log(trackInfo);
 
     return {
@@ -115,6 +115,21 @@ async function getTrackName(url: string, platform: string): Promise<string> {
   });
 }
 
+async function getTrackInfo(trackName: string, targetPlatform: string) {
+  if (targetPlatform === "spotify") {
+    return getSpotifyTrackInfo(trackName);
+  }
+
+  if (targetPlatform === "deezer") {
+    return getDeezerTrackInfo(trackName);
+  }
+
+  throw createError({
+    statusCode: 500,
+    message: "Unsupported platform, asked for " + targetPlatform,
+  });
+}
+
 async function getSpotifyTrackName(url: string) {
   // Extract track ID from Spotify URL
   const trackId = url.split("/track/")[1]?.split("?")[0];
@@ -139,6 +154,39 @@ async function getSpotifyTrackName(url: string) {
   const track = await response.json();
   console.log(track);
   return track.name + " " + track.artists[0].name + " " + track.album.name;
+}
+
+async function getSpotifyTrackInfo(trackName: string) {
+  const accessToken = await getSpotifyAccessToken();
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+      trackName
+    )}&type=track&limit=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch from Spotify API");
+  }
+
+  const data = await response.json();
+  if (!data.tracks.items || data.tracks.items.length === 0) {
+    throw new Error("No matching track found on Spotify");
+  }
+
+  const track = data.tracks.items[0];
+  console.log(track.album.images);
+  return {
+    redirectUrl: track.external_urls.spotify,
+    title: track.name,
+    artist: track.artists[0].name,
+    album: track.album.name,
+    cover: track.album.images[1].url,
+  };
 }
 
 async function getSpotifyAccessToken() {
