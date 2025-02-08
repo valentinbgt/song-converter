@@ -194,6 +194,7 @@ async function convert() {
       method: "POST",
       body: {
         url: link.value,
+        platform: selectedPlatform.value,
       },
     });
 

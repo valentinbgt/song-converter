@@ -24,29 +24,17 @@ export default defineEventHandler(async (event) => {
     const trackName = await getTrackName(url, originPlatform);
     console.log(trackName);
 
-    const response = await fetch(
-      `https://api.deezer.com/search/track/?q=${encodeURIComponent(
-        trackName
-      )}&index=0&limit=1`
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch from Deezer API");
-    }
+    //get track info
+    const trackInfo = await getDeezerTrackInfo(trackName);
+    console.log(trackInfo);
 
-    const data = await response.json();
-    if (!data.data || !data.data[0]) {
-      throw new Error("No matching track found on Deezer");
-    }
-
-    const track = data.data[0];
-    //console.log(track);
     return {
       originalUrl: url,
-      redirectUrl: track.link,
-      title: track.title,
-      artist: track.artist.name,
-      album: track.album.title,
-      cover: track.album.cover_medium,
+      redirectUrl: trackInfo.redirectUrl,
+      title: trackInfo.title,
+      artist: trackInfo.artist,
+      album: trackInfo.album,
+      cover: trackInfo.cover,
     };
   } catch (error) {
     console.error("Detailed error:", error);
@@ -200,6 +188,32 @@ async function getDeezerTrackName(url: string) {
 
   const data = await response.json();
   return data.title + " " + data.artist.name + " " + data.album.title;
+}
+
+async function getDeezerTrackInfo(trackName: string) {
+  const response = await fetch(
+    `https://api.deezer.com/search/track/?q=${encodeURIComponent(
+      trackName
+    )}&index=0&limit=1`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch from Deezer API");
+  }
+
+  const data = await response.json();
+  if (!data.data || !data.data[0]) {
+    throw new Error("No matching track found on Deezer");
+  }
+
+  const track = data.data[0];
+
+  return {
+    redirectUrl: track.link,
+    title: track.title,
+    artist: track.artist.name,
+    album: track.album.title,
+    cover: track.album.cover_medium,
+  };
 }
 
 async function unshortenURL(url: string) {
