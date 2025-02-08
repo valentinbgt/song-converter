@@ -46,7 +46,7 @@
     />
   </div>
 
-  <div v-if="result.redirectUrl">
+  <div v-if="result.redirectUrl && !loading">
     <p>✅ - Match found</p>
     <p>{{ result.title }}</p>
     <p>{{ result.artist }}</p>
