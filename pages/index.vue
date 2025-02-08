@@ -30,6 +30,12 @@
     >
   </div>
 
+  <div>
+
+    <URadioGroup v-model="selectedProvider" legend="Vers quelle plateforme veux-tu être redirigé ?" :options="provider" />
+
+  </div>
+
   <div v-if="result.redirectUrl">
     <p>✅ - Match found</p>
     <p>{{ result.title }}</p>
@@ -48,6 +54,39 @@ const link = ref("");
 const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
+
+const provider = [{
+        value: 'spotify',
+        label: 'Spotify'
+      }, {
+        value: 'deezer',
+        label: 'Deezer'
+      }, {
+        value: 'applemusic',
+        label: 'Apple Music'
+      },
+      {
+        value: 'youtube',
+        label: 'Youtube'
+      },
+      {
+        value: 'soundcloud',
+        label: 'Soundcloud'
+      },
+      {
+        value: 'tidal',
+        label: 'Tidal'
+      },
+      {
+        value: 'amazonmusic',
+        label: 'Amazon Music'
+      },
+      {
+        value: 'napster',
+        label: 'Napster'
+      }
+    ]
+const selectedProvider = ref('deezer')
 
 onMounted(() => {
   redirect.value = localStorage.getItem('redirect') !== 'false';
