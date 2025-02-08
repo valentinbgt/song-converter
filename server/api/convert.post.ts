@@ -11,6 +11,13 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  if (!targetPlatform) {
+    throw createError({
+      statusCode: 400,
+      message: "Target platform is required",
+    });
+  }
+
   try {
     const originPlatform = detectOrgininPlatform(url);
 
