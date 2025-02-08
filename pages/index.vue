@@ -67,11 +67,11 @@ const provider = [{
       },
       {
         value: 'youtube',
-        label: 'Youtube'
+        label: 'YouTube'
       },
       {
         value: 'soundcloud',
-        label: 'Soundcloud'
+        label: 'SoundCloud'
       },
       {
         value: 'tidal',
