@@ -6,22 +6,30 @@
     <p>
       <UToggle v-model="redirect" />
       <span>Auto redirect</span>
-      <UTooltip text="Automatically open the title on the target platform when match found." :popper="{ placement: 'right' }">
+      <UTooltip
+        text="Automatically open the title on the target platform when match found."
+        :popper="{ placement: 'right' }"
+      >
         <UKbd>?</UKbd>
       </UTooltip>
-
     </p>
     <p>
       <UToggle v-model="convertOnPaste" />
       <span>Convert on pasting</span>
-      <UTooltip text="Convert the link when pasting detected." :popper="{ placement: 'right' }">
+      <UTooltip
+        text="Convert the link when pasting detected."
+        :popper="{ placement: 'right' }"
+      >
         <UKbd>?</UKbd>
       </UTooltip>
     </p>
     <p>
       <UToggle v-model="newTab" />
       <span>Open in new tab</span>
-      <UTooltip text="Open the title in a new tab." :popper="{ placement: 'right' }">
+      <UTooltip
+        text="Open the title in a new tab."
+        :popper="{ placement: 'right' }"
+      >
         <UKbd>?</UKbd>
       </UTooltip>
     </p>
@@ -31,9 +39,11 @@
   </div>
 
   <div>
-
-    <URadioGroup v-model="selectedProvider" legend="Vers quelle plateforme veux-tu être redirigé ?" :options="provider" />
-
+    <URadioGroup
+      v-model="selectedProvider"
+      legend="Vers quelle plateforme veux-tu être redirigé ?"
+      :options="provider"
+    />
   </div>
 
   <div v-if="result.redirectUrl">
@@ -55,54 +65,58 @@ const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
 
-const provider = [{
-        value: 'spotify',
-        label: 'Spotify'
-      }, {
-        value: 'deezer',
-        label: 'Deezer'
-      }, {
-        value: 'applemusic',
-        label: 'Apple Music'
-      },
-      {
-        value: 'youtube',
-        label: 'YouTube'
-      },
-      {
-        value: 'soundcloud',
-        label: 'SoundCloud'
-      },
-      {
-        value: 'tidal',
-        label: 'Tidal'
-      },
-      {
-        value: 'amazonmusic',
-        label: 'Amazon Music'
-      },
-      {
-        value: 'napster',
-        label: 'Napster'
-      }
-    ]
-const selectedProvider = ref('deezer')
+const provider = [
+  {
+    value: "spotify",
+    label: "Spotify",
+  },
+  {
+    value: "deezer",
+    label: "Deezer",
+  },
+  {
+    value: "applemusic",
+    label: "Apple Music",
+  },
+  {
+    value: "youtube",
+    label: "YouTube",
+  },
+  {
+    value: "soundcloud",
+    label: "SoundCloud",
+  },
+  {
+    value: "tidal",
+    label: "Tidal",
+  },
+  {
+    value: "amazonmusic",
+    label: "Amazon Music",
+  },
+  {
+    value: "napster",
+    label: "Napster",
+  },
+];
+
+const selectedProvider = ref("deezer");
 
 onMounted(() => {
-  redirect.value = localStorage.getItem('redirect') !== 'false';
-  convertOnPaste.value = localStorage.getItem('convertOnPaste') !== 'false';
-  newTab.value = localStorage.getItem('newTab') === 'true';
+  redirect.value = localStorage.getItem("redirect") !== "false";
+  convertOnPaste.value = localStorage.getItem("convertOnPaste") !== "false";
+  newTab.value = localStorage.getItem("newTab") === "true";
 
   watch(redirect, (newValue) => {
-    localStorage.setItem('redirect', newValue.toString());
+    localStorage.setItem("redirect", newValue.toString());
   });
 
   watch(convertOnPaste, (newValue) => {
-    localStorage.setItem('convertOnPaste', newValue.toString());
+    localStorage.setItem("convertOnPaste", newValue.toString());
   });
 
   watch(newTab, (newValue) => {
-    localStorage.setItem('newTab', newValue.toString());
+    localStorage.setItem("newTab", newValue.toString());
   });
 });
 
