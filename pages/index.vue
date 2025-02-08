@@ -1,59 +1,85 @@
 <template>
-  <div>
-    <h1>Paste your link</h1>
-    <UInput v-model="link" @keyup.enter="convert" @paste="onPaste" />
-    <UButton @click="checkClipboard">Check my clipboard</UButton>
-    <p>
-      <UToggle v-model="redirect" />
-      <span>Auto redirect</span>
-      <UTooltip
-        text="Automatically open the title on the target platform when match found."
-        :popper="{ placement: 'right' }"
-      >
-        <UKbd>?</UKbd>
-      </UTooltip>
-    </p>
-    <p>
-      <UToggle v-model="convertOnPaste" />
-      <span>Convert on pasting</span>
-      <UTooltip
-        text="Convert the link when pasting detected."
-        :popper="{ placement: 'right' }"
-      >
-        <UKbd>?</UKbd>
-      </UTooltip>
-    </p>
-    <p>
-      <UToggle v-model="newTab" />
-      <span>Open in new tab</span>
-      <UTooltip
-        text="Open the title in a new tab."
-        :popper="{ placement: 'right' }"
-      >
-        <UKbd>?</UKbd>
-      </UTooltip>
-    </p>
-    <UButton :disabled="!isUrlValid(link)" :loading="loading" @click="convert"
-      >Convert</UButton
-    >
-  </div>
+  <UContainer class="mt-8">
+    <!--page title-->
+    <div>
+      <h1 class="text-3xl font-bold w-full text-center">
+        Any music link to your favorite platform
+      </h1>
+    </div>
 
-  <div>
-    <URadioGroup
-      v-model="selectedPlatform"
-      legend="Vers quelle plateforme veux-tu être redirigé ?"
-      :options="platforms"
-    />
-  </div>
+    <!--form-->
+    <div class="mt-4">
+      <p>Paste your link</p>
+      <p>
+        <UToggle v-model="redirect" />
+        <span>Auto redirect</span>
+        <UTooltip
+          text="Automatically open the title on the target platform when match found."
+          :popper="{ placement: 'right' }"
+        >
+          <UKbd>?</UKbd>
+        </UTooltip>
+      </p>
+      <p>
+        <UToggle v-model="convertOnPaste" />
+        <span>Convert on pasting</span>
+        <UTooltip
+          text="Convert the link when pasting detected."
+          :popper="{ placement: 'right' }"
+        >
+          <UKbd>?</UKbd>
+        </UTooltip>
+      </p>
+      <p>
+        <UToggle v-model="newTab" />
+        <span>Open in new tab</span>
+        <UTooltip
+          text="Open the title in a new tab."
+          :popper="{ placement: 'right' }"
+        >
+          <UKbd>?</UKbd>
+        </UTooltip>
+      </p>
+      <UContainer class="flex gap-2">
+        <UButtonGroup size="md" orientation="horizontal">
+          <UInput
+            v-model="link"
+            @keyup.enter="convert"
+            @paste="onPaste"
+            class="w-96"
+          />
+          <UButton
+            @click="checkClipboard"
+            icon="i-lucide:clipboard-paste"
+            color="gray"
+          />
+          <UButton
+            :disabled="!isUrlValid(link)"
+            :loading="loading"
+            @click="convert"
+            >Convert</UButton
+          >
+        </UButtonGroup>
+      </UContainer>
+    </div>
 
-  <div v-if="result.redirectUrl && !loading">
-    <p>✅ - Match found</p>
-    <p>{{ result.title }}</p>
-    <p>{{ result.artist }}</p>
-    <p>{{ result.album }}</p>
-    <img :src="result.cover" />
-    <UButton @click="openTitle">Open</UButton>
-  </div>
+    <div class="mt-4">
+      <URadioGroup
+        v-model="selectedPlatform"
+        legend="Vers quelle plateforme veux-tu être redirigé ?"
+        :options="platforms"
+      />
+    </div>
+
+    <div v-if="result.redirectUrl && !loading" class="mt-4">
+      <p>✅ - Match found</p>
+      <p>{{ result.title }}</p>
+      <p>{{ result.artist }}</p>
+      <p>{{ result.album }}</p>
+      <img :src="result.cover" />
+      <UButton @click="openTitle">Open</UButton>
+    </div>
+  </UContainer>
 </template>
 
 <script setup lang="ts">
@@ -181,6 +207,8 @@ function checkClipboard() {
     if (isUrlValid(text)) {
       link.value = text;
       convert();
+    } else {
+      console.log("Invalid URL");
     }
   });
 }
