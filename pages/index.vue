@@ -40,9 +40,9 @@
 
   <div>
     <URadioGroup
-      v-model="selectedProvider"
+      v-model="selectedPlatform"
       legend="Vers quelle plateforme veux-tu être redirigé ?"
-      :options="provider"
+      :options="platforms"
     />
   </div>
 
@@ -65,7 +65,7 @@ const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
 
-const provider = [
+const platforms = [
   {
     value: "spotify",
     label: "Spotify",
@@ -81,6 +81,10 @@ const provider = [
   {
     value: "youtube",
     label: "YouTube",
+  },
+  {
+    value: "youtubemusic",
+    label: "YouTube Music",
   },
   {
     value: "soundcloud",
@@ -100,7 +104,7 @@ const provider = [
   },
 ];
 
-const selectedProvider = ref("deezer");
+const selectedPlatform = ref("deezer");
 
 onMounted(() => {
   redirect.value = localStorage.getItem("redirect") !== "false";

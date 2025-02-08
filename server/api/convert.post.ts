@@ -12,7 +12,16 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const trackName = await getSpotifyTrackName(url);
+    const originPlatform = detectOrgininPlatform(url);
+
+    if (!originPlatform) {
+      throw createError({
+        statusCode: 400,
+        message: "Could not detect origin platform",
+      });
+    }
+
+    const trackName = await getTrackName(url, originPlatform);
     console.log(trackName);
 
     const response = await fetch(
@@ -48,6 +57,66 @@ export default defineEventHandler(async (event) => {
   }
 });
 
+function detectOrgininPlatform(url: string) {
+  //https://open.spotify.com/track/12345678
+  //spotify:track:12345678
+
+  //https://www.deezer.com/track/12345678
+  //deezer://track/12345678
+
+  //https://music.apple.com/us/song/12345678
+  //music://song/12345678
+
+  //https://www.youtube.com/watch?v=12345678
+  //https://youtu.be/XWMPBarKa5s
+
+  //https://music.youtube.com/watch?v=12345678
+
+  //https://soundcloud.com/[username]/[track-slug]
+
+  //https://tidal.com/browse/track/12345678
+  //tidal://track/12345678
+
+  //https://music.amazon.com/tracks/12345678
+  //music://track/[track_id]
+
+  //https://app.napster.com/track/12345678
+
+  const platforms = [
+    {
+      platform: "spotify",
+      search: ["spotify", "open.spotify.com", "spotify:track"],
+    },
+    {
+      platform: "deezer",
+      search: ["deezer", "deezer.com", "deezer://track"],
+    },
+  ];
+
+  for (const platform of platforms) {
+    if (platform.search.some((term) => url.includes(term))) {
+      return platform.platform;
+    }
+  }
+
+  return null;
+}
+
+async function getTrackName(url: string, platform: string): Promise<string> {
+  if (platform === "spotify") {
+    return getSpotifyTrackName(url);
+  }
+
+  if (platform === "deezer") {
+    return getDeezerTrackName(url);
+  }
+
+  throw createError({
+    statusCode: 500,
+    message: "Unsupported platform",
+  });
+}
+
 async function getSpotifyTrackName(url: string) {
   // Extract track ID from Spotify URL
   const trackId = url.split("/track/")[1]?.split("?")[0];
@@ -71,7 +140,7 @@ async function getSpotifyTrackName(url: string) {
 
   const track = await response.json();
   console.log(track);
-  return track.name + ' ' + track.artists[0].name + ' ' + track.album.name;
+  return track.name + " " + track.artists[0].name + " " + track.album.name;
 }
 
 async function getSpotifyAccessToken() {
@@ -105,4 +174,20 @@ async function getSpotifyAccessToken() {
   }
 
   return tokenData.access_token;
+}
+
+async function getDeezerTrackName(url: string) {
+  // Extract track ID from Deezer URL
+  const trackId = url.split("/track/")[1]?.split("?")[0];
+  if (!trackId) {
+    throw new Error("Could not extract track ID");
+  }
+
+  const response = await fetch(`https://api.deezer.com/track/${trackId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch track from Deezer");
+  }
+
+  const data = await response.json();
+  return data.title + " " + data.artist.name + " " + data.album.title;
 }
