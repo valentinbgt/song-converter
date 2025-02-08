@@ -64,6 +64,7 @@ const link = ref("");
 const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
+const selectedPlatform = ref("deezer");
 
 const platforms = [
   {
@@ -113,12 +114,11 @@ const platforms = [
   },
 ];
 
-const selectedPlatform = ref("deezer");
-
 onMounted(() => {
   redirect.value = localStorage.getItem("redirect") !== "false";
   convertOnPaste.value = localStorage.getItem("convertOnPaste") !== "false";
   newTab.value = localStorage.getItem("newTab") === "true";
+  selectedPlatform.value = localStorage.getItem("selectedPlatform") || "deezer";
 
   watch(redirect, (newValue) => {
     localStorage.setItem("redirect", newValue.toString());
@@ -130,6 +130,10 @@ onMounted(() => {
 
   watch(newTab, (newValue) => {
     localStorage.setItem("newTab", newValue.toString());
+  });
+
+  watch(selectedPlatform, (newValue) => {
+    localStorage.setItem("selectedPlatform", newValue);
   });
 });
 
