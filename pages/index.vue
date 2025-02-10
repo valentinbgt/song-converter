@@ -112,46 +112,55 @@ const platforms = [
     value: "deezer",
     label: "Deezer",
     disabled: false,
+    icon: "deezer.webp",
   },
   {
     value: "spotify",
     label: "Spotify",
     disabled: false,
+    icon: "spotify.webp",
   },
   {
     value: "applemusic",
     label: "Apple Music",
     disabled: true,
+    icon: "apple_music.webp",
   },
   {
     value: "youtube",
     label: "YouTube",
     disabled: true,
+    icon: "youtube.webp",
   },
   {
     value: "youtubemusic",
     label: "YouTube Music",
     disabled: true,
+    icon: "youtube_music.webp",
   },
   {
     value: "soundcloud",
     label: "SoundCloud",
     disabled: true,
+    icon: "soundcloud.webp",
   },
   {
     value: "tidal",
     label: "Tidal",
     disabled: true,
+    icon: "tidal.webp",
   },
   {
     value: "amazonmusic",
     label: "Amazon Music",
     disabled: true,
+    icon: "amazon_music.webp",
   },
   {
     value: "napster",
     label: "Napster",
     disabled: true,
+    icon: "napster.webp",
   },
 ];
 

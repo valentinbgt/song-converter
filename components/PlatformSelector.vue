@@ -1,15 +1,15 @@
 <template>
   <p>Choose your favourite platform</p>
-  <div class="flex gap-4 p-2">
+  <div class="flex gap-4 p-2 flex-wrap w-full">
     <PlatformSelectorButton
       v-for="platform in platforms"
       :key="platform.value"
       :selected="selectedPlatform === platform.value"
       :disabled="platform.disabled"
       @select="selectPlatform(platform.value)"
-    >
-      {{ platform.label }}
-    </PlatformSelectorButton>
+      :label="platform.label"
+      :icon="platform.icon"
+    />
   </div>
 </template>
 
@@ -19,6 +19,7 @@ defineProps<{
     value: string;
     label: string;
     disabled: boolean;
+    icon: string;
   }[];
   selectedPlatform: string;
 }>();
