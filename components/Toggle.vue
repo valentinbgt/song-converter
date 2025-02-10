@@ -7,7 +7,7 @@
     <span @click="toggle" class="cursor-pointer">{{ label }}</span>
     <UTooltip
       :text="description"
-      :popper="{ placement: 'right' }"
+      :popper="{ placement: 'top' }"
       class="cursor-help"
     >
       <UKbd>?</UKbd>

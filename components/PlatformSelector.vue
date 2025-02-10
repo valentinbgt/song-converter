@@ -1,5 +1,5 @@
 <template>
-  <p>Choose your favourite platform</p>
+  <p>Choose your favourite platform :</p>
   <div class="flex gap-4 p-2 flex-wrap w-full">
     <PlatformSelectorButton
       v-for="platform in platforms"

@@ -8,69 +8,67 @@
     </div>
 
     <div class="mt-4">
-      <div class="mt-4">
-        <PlatformSelector
-          :platforms="platforms"
-          :selectedPlatform="selectedPlatform"
-          @select="selectPlatform"
+      <PlatformSelector
+        :platforms="platforms"
+        :selectedPlatform="selectedPlatform"
+        @select="selectPlatform"
+      />
+    </div>
+
+    <div class="mt-4">
+      <p>Paste your link :</p>
+
+      <div class="flex gap-2 flex-wrap my-2">
+        <Toggle
+          v-model="redirect"
+          label="Auto redirect"
+          description="Automatically open the track when match found."
+        />
+
+        <Toggle
+          v-model="convertOnPaste"
+          label="Convert on pasting"
+          description="Convert the link when pasting detected."
+        />
+
+        <Toggle
+          v-model="newTab"
+          label="Open in new tab"
+          description="Open the track in a new tab."
         />
       </div>
-      <div>debug: Selected platform: {{ selectedPlatform }}</div>
-      <br />
-      <p>Paste your link</p>
 
-      <Toggle
-        v-model="redirect"
-        label="Auto redirect"
-        description="Automatically open the track when match found."
-      />
-
-      <Toggle
-        v-model="convertOnPaste"
-        label="Convert on pasting"
-        description="Convert the link when pasting detected."
-      />
-
-      <Toggle
-        v-model="newTab"
-        label="Open in new tab"
-        description="Open the track in a new tab."
-      />
-
-      <UContainer class="flex gap-2">
-        <UButtonGroup size="md" orientation="horizontal">
-          <UInput
-            v-model="link"
-            @keyup.enter="convert"
-            @paste="onPaste"
-            class="w-96"
-            placeholder="https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz?si=12627b1f009245c1"
-          />
-          <UButton
-            @click="checkClipboard"
-            icon="i-lucide:clipboard-paste"
-            color="gray"
-          />
-          <UButton
-            :disabled="!isUrlValid(link)"
-            :loading="loading"
-            @click="convert"
-            >Convert</UButton
-          >
-        </UButtonGroup>
-      </UContainer>
+      <UButtonGroup size="md" orientation="horizontal">
+        <UInput
+          v-model="link"
+          @keyup.enter="convert"
+          @paste="onPaste"
+          class="w-[500px]"
+          placeholder="https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz"
+        />
+        <UButton
+          @click="checkClipboard"
+          icon="i-lucide:clipboard-paste"
+          color="gray"
+        />
+        <UButton
+          :disabled="!isUrlValid(link)"
+          :loading="loading"
+          @click="convert"
+          >Convert</UButton
+        >
+      </UButtonGroup>
     </div>
 
     <div
       v-if="result.redirectUrl && !loading"
-      class="flex w-fit min-w-[600px] max-w-full mt-4 p-4 border-2 border-white rounded-xl relative"
+      class="flex w-fit min-w-[600px] max-w-full mt-8 p-4 border-2 border-white rounded-xl relative mx-auto"
     >
       <img :src="result.cover" class="rounded-lg" />
       <div class="ml-4">
         <p class="text-2xl font-bold">{{ result.title }}</p>
         <p class="text-lg">{{ result.artist }}</p>
         <p class="text-sm text-gray-500">{{ result.album }}</p>
-        <!--Place the button in the bottom right corner-->
         <div class="absolute bottom-4 right-4">
           <UButton @click="openTitle" class="text-base"
             >Open in
@@ -89,7 +87,7 @@ import type { _borderWidth } from "#tailwind-config/theme";
 import { nextTick, ref, watch, onMounted } from "vue";
 
 const link = ref(
-  "https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz?si=12627b1f009245c1  "
+  "https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz"
 );
 
 const redirect = ref(true);
