@@ -7,15 +7,15 @@
       </h1>
     </div>
 
-    <!--form-->
     <div class="mt-4">
       <div class="mt-4">
-        <URadioGroup
-          v-model="selectedPlatform"
-          legend="Vers quelle plateforme veux-tu être redirigé ?"
-          :options="platforms"
+        <PlatformSelector
+          :platforms="platforms"
+          :selectedPlatform="selectedPlatform"
+          @select="selectPlatform"
         />
       </div>
+      <div>debug: Selected platform: {{ selectedPlatform }}</div>
       <p>Paste your link</p>
       <p>
         <UToggle v-model="redirect" />
@@ -83,7 +83,10 @@
         <!--Place the button in the bottom right corner-->
         <div class="absolute bottom-4 right-4">
           <UButton @click="openTitle" class="text-base"
-            >Open in {{ selectedPlatform }}</UButton
+            >Open in
+            {{
+              platforms.find((p) => p.value === selectedPlatform)?.label
+            }}</UButton
           >
         </div>
       </div>
@@ -106,13 +109,13 @@ const selectedPlatform = ref("deezer");
 
 const platforms = [
   {
-    value: "spotify",
-    label: "Spotify",
+    value: "deezer",
+    label: "Deezer",
     disabled: false,
   },
   {
-    value: "deezer",
-    label: "Deezer",
+    value: "spotify",
+    label: "Spotify",
     disabled: false,
   },
   {
@@ -186,6 +189,10 @@ interface ConvertResult {
 }
 
 const result = ref<ConvertResult>({});
+
+function selectPlatform(value: string) {
+  selectedPlatform.value = value;
+}
 
 function isUrlValid(str: string): boolean {
   try {
