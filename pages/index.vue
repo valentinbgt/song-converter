@@ -16,37 +16,27 @@
         />
       </div>
       <div>debug: Selected platform: {{ selectedPlatform }}</div>
+      <br />
       <p>Paste your link</p>
-      <p>
-        <UToggle v-model="redirect" />
-        <span>Auto redirect</span>
-        <UTooltip
-          text="Automatically open the title on the target platform when match found."
-          :popper="{ placement: 'right' }"
-        >
-          <UKbd>?</UKbd>
-        </UTooltip>
-      </p>
-      <p>
-        <UToggle v-model="convertOnPaste" />
-        <span>Convert on pasting</span>
-        <UTooltip
-          text="Convert the link when pasting detected."
-          :popper="{ placement: 'right' }"
-        >
-          <UKbd>?</UKbd>
-        </UTooltip>
-      </p>
-      <p>
-        <UToggle v-model="newTab" />
-        <span>Open in new tab</span>
-        <UTooltip
-          text="Open the title in a new tab."
-          :popper="{ placement: 'right' }"
-        >
-          <UKbd>?</UKbd>
-        </UTooltip>
-      </p>
+
+      <Toggle
+        v-model="redirect"
+        label="Auto redirect"
+        description="Automatically open the track when match found."
+      />
+
+      <Toggle
+        v-model="convertOnPaste"
+        label="Convert on pasting"
+        description="Convert the link when pasting detected."
+      />
+
+      <Toggle
+        v-model="newTab"
+        label="Open in new tab"
+        description="Open the track in a new tab."
+      />
+
       <UContainer class="flex gap-2">
         <UButtonGroup size="md" orientation="horizontal">
           <UInput
