@@ -73,14 +73,19 @@
 
     <div
       v-if="result.redirectUrl && !loading"
-      class="flex mt-4 p-4 border-2 border-white rounded-xl"
+      class="flex w-fit min-w-[600px] max-w-full mt-4 p-4 border-2 border-white rounded-xl relative"
     >
       <img :src="result.cover" class="rounded-lg" />
       <div class="ml-4">
         <p class="text-2xl font-bold">{{ result.title }}</p>
         <p class="text-lg">{{ result.artist }}</p>
-        <p class="text-sm">{{ result.album }}</p>
-        <UButton @click="openTitle">Open in {{ selectedPlatform }}</UButton>
+        <p class="text-sm text-gray-500">{{ result.album }}</p>
+        <!--Place the button in the bottom right corner-->
+        <div class="absolute bottom-4 right-4">
+          <UButton @click="openTitle" class="text-base"
+            >Open in {{ selectedPlatform }}</UButton
+          >
+        </div>
       </div>
     </div>
   </UContainer>
