@@ -61,21 +61,23 @@
     </div>
 
     <div
-      v-if="result.redirectUrl && !loading"
       class="flex w-fit min-w-[600px] max-w-full mt-8 p-4 border-2 border-white rounded-xl relative mx-auto"
     >
-      <img :src="result.cover" class="rounded-lg" />
-      <div class="ml-4">
-        <p class="text-2xl font-bold">{{ result.title }}</p>
-        <p class="text-lg">{{ result.artist }}</p>
-        <p class="text-sm text-gray-500">{{ result.album }}</p>
-        <div class="absolute bottom-4 right-4">
-          <UButton @click="openTitle" class="text-base"
-            >Open in
-            {{
-              platforms.find((p) => p.value === selectedPlatform)?.label
-            }}</UButton
-          >
+      <p v-if="!result.title">No content to display</p>
+      <div v-else class="flex">
+        <img :src="result.cover" class="rounded-lg" />
+        <div class="ml-4">
+          <p class="text-2xl font-bold">{{ result.title }}</p>
+          <p class="text-lg">{{ result.artist }}</p>
+          <p class="text-sm text-gray-500">{{ result.album }}</p>
+          <div class="absolute bottom-4 right-4">
+            <UButton @click="openTitle" class="text-base"
+              >Open in
+              {{
+                platforms.find((p) => p.value === selectedPlatform)?.label
+              }}</UButton
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -86,9 +88,7 @@
 import type { _borderWidth } from "#tailwind-config/theme";
 import { nextTick, ref, watch, onMounted } from "vue";
 
-const link = ref(
-  "https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz"
-);
+const link = ref("");
 
 const redirect = ref(true);
 const convertOnPaste = ref(true);
@@ -152,6 +152,10 @@ const platforms = [
   },
 ];
 
+interface DailyTrackResponse {
+  url: string;
+}
+
 onMounted(() => {
   redirect.value = localStorage.getItem("redirect") !== "false";
   convertOnPaste.value = localStorage.getItem("convertOnPaste") !== "false";
@@ -172,6 +176,11 @@ onMounted(() => {
 
   watch(selectedPlatform, (newValue) => {
     localStorage.setItem("selectedPlatform", newValue);
+  });
+
+  $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
+    link.value = res.url;
+    convert();
   });
 });
 
