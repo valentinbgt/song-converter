@@ -9,6 +9,13 @@
 
     <!--form-->
     <div class="mt-4">
+      <div class="mt-4">
+        <URadioGroup
+          v-model="selectedPlatform"
+          legend="Vers quelle plateforme veux-tu être redirigé ?"
+          :options="platforms"
+        />
+      </div>
       <p>Paste your link</p>
       <p>
         <UToggle v-model="redirect" />
@@ -47,6 +54,7 @@
             @keyup.enter="convert"
             @paste="onPaste"
             class="w-96"
+            placeholder="https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz?si=12627b1f009245c1"
           />
           <UButton
             @click="checkClipboard"
@@ -63,29 +71,28 @@
       </UContainer>
     </div>
 
-    <div class="mt-4">
-      <URadioGroup
-        v-model="selectedPlatform"
-        legend="Vers quelle plateforme veux-tu être redirigé ?"
-        :options="platforms"
-      />
-    </div>
-
-    <div v-if="result.redirectUrl && !loading" class="mt-4">
-      <p>✅ - Match found</p>
-      <p>{{ result.title }}</p>
-      <p>{{ result.artist }}</p>
-      <p>{{ result.album }}</p>
-      <img :src="result.cover" />
-      <UButton @click="openTitle">Open</UButton>
+    <div
+      v-if="result.redirectUrl && !loading"
+      class="flex mt-4 p-4 border-2 border-white rounded-xl"
+    >
+      <img :src="result.cover" class="rounded-lg" />
+      <div class="ml-4">
+        <p class="text-2xl font-bold">{{ result.title }}</p>
+        <p class="text-lg">{{ result.artist }}</p>
+        <p class="text-sm">{{ result.album }}</p>
+        <UButton @click="openTitle">Open in {{ selectedPlatform }}</UButton>
+      </div>
     </div>
   </UContainer>
 </template>
 
 <script setup lang="ts">
+import type { _borderWidth } from "#tailwind-config/theme";
 import { nextTick, ref, watch, onMounted } from "vue";
 
-const link = ref("");
+const link = ref(
+  "https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz?si=12627b1f009245c1  "
+);
 
 const redirect = ref(true);
 const convertOnPaste = ref(true);
