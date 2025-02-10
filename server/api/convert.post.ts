@@ -29,11 +29,11 @@ export default defineEventHandler(async (event) => {
     }
 
     const trackName = await getTrackName(url, originPlatform);
-    console.log(trackName);
+    //console.log(trackName);
 
     //get track info
     const trackInfo = await getTrackInfo(trackName, targetPlatform);
-    console.log(trackInfo);
+    //console.log(trackInfo);
 
     return {
       originalUrl: url,
@@ -159,7 +159,7 @@ async function getSpotifyTrackName(url: string) {
   }
 
   const track = await response.json();
-  console.log(track);
+  //console.log(track);
   return track.name + " " + track.artists[0].name + " " + track.album.name;
 }
 
@@ -186,7 +186,7 @@ async function getSpotifyTrackInfo(trackName: string) {
   }
 
   const track = data.tracks.items[0];
-  console.log(track.album.images);
+  //console.log(track.album.images);
   return {
     redirectUrl: track.external_urls.spotify,
     title: track.name,

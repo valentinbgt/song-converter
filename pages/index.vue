@@ -225,7 +225,6 @@ async function convert() {
 
   loading.value = true;
   try {
-    console.log(selectedPlatform.value);
     result.value = await $fetch<ConvertResult>("/api/convert", {
       method: "POST",
       body: {
