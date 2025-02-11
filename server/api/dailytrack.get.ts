@@ -52,7 +52,6 @@ export default defineEventHandler(async () => {
   try {
     const PLAYLIST_URL = "https://deezer.page.link/2puZ35JEYo7kAA2SA";
     const TRACKS_DATA_PATH = "data/dailytracks.json";
-    const COOLDOWN_PERIOD = 1000 * 60 * 60 * 24; // 1 day in milliseconds
 
     async function unshortenURL(url: string): Promise<string> {
       const response = await fetch(url, { redirect: "manual" });
@@ -107,18 +106,20 @@ export default defineEventHandler(async () => {
 
     const now = Date.now();
 
-    //mark tracks as used if their cooldown has expired
+    //mark tracks as unused if from a previous day
     tracks.forEach((track) => {
-      if (track.used && track.timestamp + COOLDOWN_PERIOD <= now) {
+      if (track.timestamp > 0 && isNewDay(track.timestamp, now)) {
+        track.used = false;
+        track.timestamp = 0;
       }
     });
 
-    //identify the current active track within the cooldown period
+    //identify the current active track (must be from the same day)
     const activeTrack = tracks.find(
       (track) =>
         track.used === false &&
         track.timestamp > 0 &&
-        track.timestamp + COOLDOWN_PERIOD > now
+        !isNewDay(track.timestamp, now)
     );
 
     if (activeTrack) {
@@ -162,4 +163,11 @@ function returnTrack(track: Track): Object {
     cover: track.album.cover_medium,
     url: track.link,
   };
+}
+
+// Helper function to check if two timestamps are on different days
+function isNewDay(timestamp1: number, timestamp2: number): boolean {
+  const date1 = new Date(timestamp1);
+  const date2 = new Date(timestamp2);
+  return date1.toDateString() !== date2.toDateString();
 }
