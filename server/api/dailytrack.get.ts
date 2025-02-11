@@ -154,15 +154,28 @@ export default defineEventHandler(async () => {
   }
 });
 
-function returnTrack(track: Track): Object {
-  return {
-    redirectUrl: track.link,
-    title: track.title,
-    artist: track.artist.name,
-    album: track.album.title,
-    cover: track.album.cover_medium,
-    url: track.link,
+function returnTrack(track: Track): { [key: string]: any } {
+  let response: { [key: string]: any } = {
+    deezer: {
+      redirectUrl: track.link,
+      title: track.title,
+      artist: track.artist.name,
+      album: track.album.title,
+      cover: track.album.cover_medium,
+      url: track.link,
+    },
+    spotify: {},
+    applemusic: {},
+    youtube: {},
+    youtubemusic: {},
+    soundcloud: {},
+    tidal: {},
+    amazonmusic: {},
+    napster: {},
+    originalUrl: track.link,
   };
+
+  return response;
 }
 
 // Helper function to check if two timestamps are on different days

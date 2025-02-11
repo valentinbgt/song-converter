@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="uniqueKey === target || uniqueKey === 'all'"
     class="flex w-fit min-w-[500px] max-w-full border-2 border-white rounded-xl relative"
   >
     <div class="flex">
@@ -17,25 +18,22 @@
 </template>
 
 <script setup lang="ts">
-interface Track {
+/* interface Track {
   redirectUrl: string;
   title: string;
   artist: string;
   album: string;
   cover: string;
   url: string;
-}
+} */
 const props = defineProps<{
-  track: {
-    redirectUrl?: string;
-    title?: string;
-    artist?: string;
-    album?: string;
-    cover?: string;
-    url?: string;
-  };
+  track: any;
   newTab: boolean;
+  uniqueKey: string;
+  target: string;
 }>();
+
+console.log(props.uniqueKey, props.target);
 
 function openTitle() {
   if (props.track.redirectUrl) {

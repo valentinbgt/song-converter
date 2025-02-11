@@ -72,10 +72,17 @@
       </span>
     </UDivider>
     <div
-      v-if="result.redirectUrl"
+      v-if="result.originalUrl"
       class="flex flex-wrap justify-center gap-4 mt-4 mb-8"
     >
-      <TrackCard :track="result" :newTab="newTab" />
+      <TrackCard
+        v-for="(track, key) in result"
+        :key="key"
+        :track="track"
+        :uniqueKey="key"
+        :target="selectedPlatform"
+        :newTab="newTab"
+      />
     </div>
     <div v-else class="flex justify-center">
       <p class="flex w-[500px] mt-4 mb-8 p-4 border-2 border-white rounded-xl">
@@ -162,12 +169,16 @@ const platforms = [
 ];
 
 interface DailyTrackResponse {
-  redirectUrl: string;
-  title: string;
-  artist: string;
-  album: string;
-  cover: string;
-  url: string;
+  deezer: Track;
+  spotify: Track;
+  applemusic: Track;
+  youtube: Track;
+  youtubemusic: Track;
+  soundcloud: Track;
+  tidal: Track;
+  amazonmusic: Track;
+  napster: Track;
+  originalUrl: string;
 }
 
 onMounted(() => {
@@ -194,13 +205,13 @@ onMounted(() => {
 
   $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
     result.value = res;
-    inputPlaceholder.value = res.url;
+    inputPlaceholder.value = res.deezer.url || "Link of your track";
   });
 });
 
 const loading = ref(false);
 
-interface ConvertResult {
+interface Track {
   redirectUrl?: string;
   title?: string;
   artist?: string;
@@ -209,7 +220,31 @@ interface ConvertResult {
   url?: string;
 }
 
-const result = ref<ConvertResult>({});
+interface ConvertResult {
+  deezer: Track;
+  spotify: Track;
+  applemusic: Track;
+  youtube: Track;
+  youtubemusic: Track;
+  soundcloud: Track;
+  tidal: Track;
+  amazonmusic: Track;
+  napster: Track;
+  originalUrl: string;
+}
+
+const result = ref<ConvertResult>({
+  deezer: {},
+  spotify: {},
+  applemusic: {},
+  youtube: {},
+  youtubemusic: {},
+  soundcloud: {},
+  tidal: {},
+  amazonmusic: {},
+  napster: {},
+  originalUrl: "",
+});
 
 function selectPlatform(value: string) {
   selectedPlatform.value = value;
@@ -255,14 +290,16 @@ async function convert() {
         targetPlatform: selectedPlatform.value,
       },
     });
+    console.log(result.value);
 
     trackOfTheDay.value = false;
 
-    if (redirect.value && result.value.redirectUrl) {
+    // DEV: only deezer for now
+    if (redirect.value && result.value.deezer.redirectUrl) {
       if (newTab.value) {
-        window.open(result.value.redirectUrl, "_blank");
+        window.open(result.value.deezer.redirectUrl, "_blank");
       } else {
-        window.location.href = result.value.redirectUrl;
+        window.location.href = result.value.deezer.redirectUrl;
       }
     }
   } catch (error) {

@@ -34,15 +34,23 @@ export default defineEventHandler(async (event) => {
     //get track info
     const trackInfo = await getTrackInfo(trackName, targetPlatform);
     //console.log(trackInfo);
-
-    return {
+    let response: { [key: string]: any } = {
+      deezer: {},
+      spotify: {},
+      applemusic: {},
+      youtube: {},
+      youtubemusic: {},
+      soundcloud: {},
+      tidal: {},
+      amazonmusic: {},
+      napster: {},
       originalUrl: url,
-      redirectUrl: trackInfo.redirectUrl,
-      title: trackInfo.title,
-      artist: trackInfo.artist,
-      album: trackInfo.album,
-      cover: trackInfo.cover,
     };
+
+    //add platform to response
+    response[targetPlatform] = trackInfo;
+
+    return response;
   } catch (error) {
     console.error("Detailed error:", error);
     throw createError({
