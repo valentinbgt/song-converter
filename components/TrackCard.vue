@@ -4,7 +4,7 @@
     class="flex w-fit min-w-[500px] max-w-full border-2 border-white rounded-xl relative"
   >
     <div class="flex">
-      <img :src="track.cover" class="rounded-lg" />
+      <img :src="track.cover" class="rounded-lg w-64 h-64" />
       <div class="ml-4 mt-2">
         <p class="text-2xl font-bold">{{ track.title }}</p>
         <p class="text-lg">{{ track.artist }}</p>
