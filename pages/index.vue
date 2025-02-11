@@ -60,14 +60,22 @@
       </UButtonGroup>
     </div>
 
+    <UDivider class="my-4" size="sm">
+      <span v-if="trackOfTheDay" class="flex items-center gap-1">
+        Track of the day <UIcon name="bi:stars" />
+      </span>
+      <span v-else class="flex items-center gap-1">
+        Search Result <UIcon name="flowbite:search-outline" />
+      </span>
+    </UDivider>
     <div
       v-if="result.redirectUrl"
-      class="flex flex-wrap justify-center gap-4 my-8"
+      class="flex flex-wrap justify-center gap-4 mt-4 mb-8"
     >
       <TrackCard :track="result" :newTab="newTab" />
     </div>
     <div v-else class="flex justify-center">
-      <p class="flex w-[500px] my-8 p-4 border-2 border-white rounded-xl">
+      <p class="flex w-[500px] mt-4 mb-8 p-4 border-2 border-white rounded-xl">
         No content to display
       </p>
     </div>
@@ -85,6 +93,7 @@ const convertOnPaste = ref(true);
 const newTab = ref(false);
 const selectedPlatform = ref("deezer");
 const inputPlaceholder = ref("Link of your track");
+const trackOfTheDay = ref(true);
 
 const platforms = [
   {
@@ -243,6 +252,8 @@ async function convert() {
         targetPlatform: selectedPlatform.value,
       },
     });
+
+    trackOfTheDay.value = false;
 
     if (redirect.value && result.value.redirectUrl) {
       if (newTab.value) {
