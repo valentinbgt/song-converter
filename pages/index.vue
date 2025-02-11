@@ -153,6 +153,11 @@ const platforms = [
 ];
 
 interface DailyTrackResponse {
+  redirectUrl: string;
+  title: string;
+  artist: string;
+  album: string;
+  cover: string;
   url: string;
 }
 
@@ -179,8 +184,7 @@ onMounted(() => {
   });
 
   $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
-    link.value = res.url;
-    convert();
+    result.value = res;
   });
 });
 
