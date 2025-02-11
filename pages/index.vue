@@ -44,7 +44,7 @@
           @keyup.enter="convert"
           @paste="onPaste"
           class="w-[500px]"
-          placeholder="https://open.spotify.com/intl-fr/track/6xjG4EZM1rTMFJeGRNE5hz"
+          :placeholder="inputPlaceholder"
         />
         <UButton
           @click="checkClipboard"
@@ -94,6 +94,7 @@ const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
 const selectedPlatform = ref("deezer");
+const inputPlaceholder = ref("Link of your track");
 
 const platforms = [
   {
@@ -185,6 +186,7 @@ onMounted(() => {
 
   $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
     result.value = res;
+    inputPlaceholder.value = res.url;
   });
 });
 
