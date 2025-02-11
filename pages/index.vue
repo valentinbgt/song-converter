@@ -61,25 +61,15 @@
     </div>
 
     <div
-      class="flex w-fit min-w-[600px] max-w-full mt-8 p-4 border-2 border-white rounded-xl relative mx-auto"
+      v-if="result.redirectUrl"
+      class="flex flex-wrap justify-center gap-4 my-8"
     >
-      <p v-if="!result.title">No content to display</p>
-      <div v-else class="flex">
-        <img :src="result.cover" class="rounded-lg" />
-        <div class="ml-4">
-          <p class="text-2xl font-bold">{{ result.title }}</p>
-          <p class="text-lg">{{ result.artist }}</p>
-          <p class="text-sm text-gray-500">{{ result.album }}</p>
-          <div class="absolute bottom-4 right-4">
-            <UButton @click="openTitle" class="text-base"
-              >Open in
-              {{
-                platforms.find((p) => p.value === selectedPlatform)?.label
-              }}</UButton
-            >
-          </div>
-        </div>
-      </div>
+      <TrackCard :track="result" :newTab="newTab" />
+    </div>
+    <div v-else class="flex justify-center">
+      <p class="flex w-[500px] my-8 p-4 border-2 border-white rounded-xl">
+        No content to display
+      </p>
     </div>
   </UContainer>
 </template>
@@ -204,6 +194,7 @@ interface ConvertResult {
   artist?: string;
   album?: string;
   cover?: string;
+  url?: string;
 }
 
 const result = ref<ConvertResult>({});
@@ -226,16 +217,6 @@ function onPaste(event: Event) {
     nextTick(() => {
       convert();
     });
-  }
-}
-
-function openTitle() {
-  if (result.value.redirectUrl) {
-    if (newTab.value) {
-      window.open(result.value.redirectUrl, "_blank");
-    } else {
-      window.location.href = result.value.redirectUrl;
-    }
   }
 }
 
@@ -263,8 +244,12 @@ async function convert() {
       },
     });
 
-    if (redirect.value) {
-      openTitle();
+    if (redirect.value && result.value.redirectUrl) {
+      if (newTab.value) {
+        window.open(result.value.redirectUrl, "_blank");
+      } else {
+        window.location.href = result.value.redirectUrl;
+      }
     }
   } catch (error) {
     console.error("Error converting URL:", error);
