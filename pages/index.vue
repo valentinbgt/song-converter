@@ -151,6 +151,12 @@ const platforms = [
     disabled: true,
     icon: "napster.webp",
   },
+  {
+    value: "all",
+    label: "All Platforms",
+    disabled: false,
+    icon: "all.webp",
+  },
 ];
 
 interface DailyTrackResponse {
