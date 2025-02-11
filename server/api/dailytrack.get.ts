@@ -139,7 +139,10 @@ export default defineEventHandler(async () => {
     );
 
     if (availableTracks.length === 0) {
-      throw new Error("No available tracks left to select.");
+      const mostRecent = [...tracks].sort(
+        (a, b) => b.timestamp - a.timestamp
+      )[0];
+      return returnTrack(mostRecent);
     }
 
     //select a random track from the available tracks
