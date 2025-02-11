@@ -71,8 +71,12 @@
         Search Result <UIcon name="flowbite:search-outline" />
       </span>
     </UDivider>
+
+    <div v-if="loading" class="flex flex-wrap justify-center gap-4 mt-4 mb-8">
+      <LoadingTrackCard />
+    </div>
     <div
-      v-if="result.originalUrl"
+      v-else-if="result.originalUrl"
       class="flex flex-wrap justify-center gap-4 mt-4 mb-8"
     >
       <TrackCard
