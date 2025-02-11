@@ -5,7 +5,7 @@
   >
     <div class="flex">
       <img :src="track.cover" class="rounded-lg" />
-      <div class="ml-4">
+      <div class="ml-4 mt-2">
         <p class="text-2xl font-bold">{{ track.title }}</p>
         <p class="text-lg">{{ track.artist }}</p>
         <p class="text-sm text-gray-500">{{ track.album }}</p>
