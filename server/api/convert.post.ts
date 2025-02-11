@@ -205,9 +205,8 @@ async function getSpotifyTrackInfo(trackName: string) {
 }
 
 async function getSpotifyAccessToken() {
-  const config = useRuntimeConfig();
-  const clientId = config.spotifyClientId;
-  const clientSecret = config.spotifyClientSecret;
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
     throw new Error("Spotify credentials not configured");
