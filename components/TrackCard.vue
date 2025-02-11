@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="uniqueKey === target || uniqueKey === 'all'"
+    v-if="uniqueKey === target || target === 'all'"
     class="flex w-fit min-w-[500px] max-w-full border-2 border-white rounded-xl relative"
   >
     <div class="flex">
