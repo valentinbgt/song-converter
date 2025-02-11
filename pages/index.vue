@@ -53,7 +53,7 @@
         />
         <UButton
           :disabled="!isUrlValid(link)"
-          :loading="loading"
+          :loading="loading && link !== ''"
           @click="convert"
           >Convert</UButton
         >
@@ -207,9 +207,11 @@ onMounted(() => {
     localStorage.setItem("selectedPlatform", newValue);
   });
 
+  loading.value = true;
   $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
     result.value = res;
     inputPlaceholder.value = res.deezer.url || "Link of your track";
+    loading.value = false;
   });
 });
 
