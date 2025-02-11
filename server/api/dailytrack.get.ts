@@ -50,7 +50,12 @@ interface Playlist {
 
 export default defineEventHandler(async () => {
   try {
-    const PLAYLIST_URL = "https://deezer.page.link/2puZ35JEYo7kAA2SA";
+    const PLAYLIST_URL = process.env.DEEZER_DAILY_TRACK_PLAYLIST;
+    if (!PLAYLIST_URL) {
+      throw new Error(
+        "DEEZER_DAILY_TRACK_PLAYLIST environment variable is not set"
+      );
+    }
     const TRACKS_DATA_PATH = "data/dailytracks.json";
 
     async function unshortenURL(url: string): Promise<string> {
