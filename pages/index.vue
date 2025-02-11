@@ -220,11 +220,11 @@ function onPaste(event: Event) {
   }
 }
 
-function checkClipboard() {
+function checkClipboard(event: Event) {
   navigator.clipboard.readText().then((text) => {
     if (isUrlValid(text)) {
       link.value = text;
-      convert();
+      onPaste(event);
     } else {
       console.log("Invalid URL");
     }
