@@ -124,7 +124,7 @@ export default defineEventHandler(async () => {
     if (activeTrack) {
       //persist any updates if necessary
       await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
-      return activeTrack;
+      return returnTrack(activeTrack);
     }
 
     //filter out tracks that have been used
@@ -146,16 +146,20 @@ export default defineEventHandler(async () => {
     //persist the updated tracks back to the JSON file
     await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
 
-    return {
-      redirectUrl: selectedTrack.link,
-      title: selectedTrack.title,
-      artist: selectedTrack.artist.name,
-      album: selectedTrack.album.title,
-      cover: selectedTrack.album.cover_medium,
-      url: selectedTrack.link,
-    };
+    return returnTrack(selectedTrack);
   } catch (error) {
     console.error("Error in dailytrack.get.ts:", error);
     throw error;
   }
 });
+
+function returnTrack(track: Track): Object {
+  return {
+    redirectUrl: track.link,
+    title: track.title,
+    artist: track.artist.name,
+    album: track.album.title,
+    cover: track.album.cover_medium,
+    url: track.link,
+  };
+}
