@@ -64,6 +64,9 @@
       <span v-if="trackOfTheDay" class="flex items-center gap-1">
         Track of the day <UIcon name="bi:stars" />
       </span>
+      <span v-else-if="loading" class="flex items-center gap-1">
+        Loading <UIcon name="eos-icons:three-dots-loading" />
+      </span>
       <span v-else class="flex items-center gap-1">
         Search Result <UIcon name="flowbite:search-outline" />
       </span>
