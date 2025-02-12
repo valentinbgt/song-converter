@@ -4,11 +4,22 @@
     class="flex w-fit min-w-[500px] max-w-full border-2 border-white rounded-xl relative"
   >
     <div class="flex">
-      <img :src="track.cover" class="rounded-lg w-64 h-64" />
-      <div class="ml-4 mt-2">
-        <p class="text-2xl font-bold">{{ track.title }}</p>
-        <p class="text-lg">{{ track.artist }}</p>
-        <p class="text-sm text-gray-500">{{ track.album }}</p>
+      <img
+        :src="
+          track.cover || 'https://cdn-images.dzcdn.net/images/cover/500x500.jpg'
+        "
+        class="rounded-lg w-64 h-64"
+      />
+      <div class="ml-4 mt-2 mr-4">
+        <p class="text-2xl font-bold">
+          {{ track.title || "No content to display" }}
+        </p>
+        <p class="text-lg">
+          {{ track.artist || "The request failed" }}
+        </p>
+        <p class="text-sm text-gray-500">
+          {{ track.album || "Try reloading the page" }}
+        </p>
         <div class="absolute bottom-4 right-4">
           <UButton @click="openTitle" class="text-base">Open</UButton>
         </div>
