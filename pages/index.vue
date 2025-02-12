@@ -7,6 +7,13 @@
       </h1>
     </div>
 
+    <UDivider class="my-4" size="sm">
+      <span class="flex items-center gap-1">
+        This website is still in development
+        <UIcon name="ri:error-warning-fill" />
+      </span>
+    </UDivider>
+
     <div class="mt-4">
       <PlatformSelector
         :platforms="platforms"
