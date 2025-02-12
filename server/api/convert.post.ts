@@ -194,7 +194,7 @@ async function getSpotifyTrackInfo(trackName: string) {
   }
 
   const track = data.tracks.items[0];
-  //console.log(track.album.images);
+  //console.log(track);
   return {
     redirectUrl: track.external_urls.spotify,
     title: track.name,
@@ -275,6 +275,7 @@ async function getDeezerTrackInfo(trackName: string) {
     artist: track.artist.name,
     album: track.album.title,
     cover: track.album.cover_medium,
+    deezerId: track.id,
   };
 }
 

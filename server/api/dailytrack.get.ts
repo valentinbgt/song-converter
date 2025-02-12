@@ -162,7 +162,7 @@ export default defineEventHandler(async () => {
   }
 });
 
-function returnTrack(track: Track): { [key: string]: any } {
+async function returnTrack(track: Track): Promise<{ [key: string]: any }> {
   let response: { [key: string]: any } = {
     deezer: {
       redirectUrl: track.link,
@@ -171,6 +171,8 @@ function returnTrack(track: Track): { [key: string]: any } {
       album: track.album.title,
       cover: track.album.cover_medium,
       url: track.link,
+      id: track.id,
+      deezerId: track.id,
     },
     spotify: {},
     applemusic: {},

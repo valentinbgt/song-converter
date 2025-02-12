@@ -23,6 +23,27 @@
         <div class="absolute bottom-4 right-4">
           <UButton @click="openTitle" class="text-base">Open</UButton>
         </div>
+
+        <div v-if="track.deezerId" class="absolute bottom-4 left-4">
+          <UButton @click="lauchPreview" class="text-base rounded-full p-2">
+            <UIcon
+              v-if="!audioPlaying"
+              name="material-symbols:play-arrow-rounded"
+              class="w-8 h-8"
+            />
+            <UIcon
+              v-else
+              name="material-symbols:stop-rounded"
+              class="w-8 h-8"
+            />
+          </UButton>
+          <audio
+            v-if="track.deezerId"
+            :src="`/api/preview?id=${track.deezerId}`"
+            :id="track.deezerId"
+            @ended="audioPlaying = false"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -44,14 +65,33 @@ const props = defineProps<{
   target: string;
 }>();
 
-console.log(props.uniqueKey, props.target);
-
+let audio = ref<HTMLAudioElement | null>(null);
+let audioPlaying = ref(false);
 function openTitle() {
   if (props.track.redirectUrl) {
     if (props.newTab) {
       window.open(props.track.redirectUrl, "_blank");
     } else {
       window.location.href = props.track.redirectUrl;
+    }
+  }
+}
+
+function lauchPreview() {
+  if (props.track.deezerId) {
+    audio.value = document.getElementById(
+      props.track.deezerId
+    ) as HTMLAudioElement;
+
+    if (audio.value) {
+      if (!audioPlaying.value) {
+        audio.value.currentTime = 0;
+        audio.value.play();
+        audioPlaying.value = true;
+      } else {
+        audio.value.pause();
+        audioPlaying.value = false;
+      }
     }
   }
 }
