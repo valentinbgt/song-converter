@@ -98,6 +98,10 @@ export default defineEventHandler(async () => {
       tracks = [];
     }
 
+    //delete (filter out) tracks that are in the database but not in the fetched playlist.
+    const playlistTrackIds = new Set(playlistTracks.map((track) => track.id));
+    tracks = tracks.filter((track) => playlistTrackIds.has(track.id));
+
     //add new tracks from the playlist to the database
     playlistTracks.forEach((newTrack) => {
       if (!tracks.some((track) => track.id === newTrack.id)) {
@@ -139,6 +143,8 @@ export default defineEventHandler(async () => {
     );
 
     if (availableTracks.length === 0) {
+      //persist deletion modifications before returning
+      await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
       const mostRecent = [...tracks].sort(
         (a, b) => b.timestamp - a.timestamp
       )[0];
