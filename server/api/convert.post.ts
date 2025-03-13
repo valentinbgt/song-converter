@@ -93,7 +93,7 @@ function detectOrgininPlatform(url: string) {
     },
     {
       platform: "deezer-page-link",
-      search: ["deezer.page.link"],
+      search: ["deezer.page.link", "dzr.page.link"],
     },
     {
       platform: "deezer",
