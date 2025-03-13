@@ -26,4 +26,4 @@ jobs:
       #      - name: Install WGET
       #        run: apt install wget -y
       - name: Trigger n8n
-        run: wget http://n8n.beauget.fr/webhook/b21bd2a3-cc70-47ed-ba3d-97421a39cedc
+        run: wget https://n8n.beauget.fr/webhook/b21bd2a3-cc70-47ed-ba3d-97421a39cedc
