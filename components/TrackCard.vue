@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="uniqueKey === target || target === 'all'"
-    class="flex w-fit min-w-[500px] max-w-full border-2 border-white rounded-xl relative"
+    class="flex w-fit min-w-[500px] max-w-full border-2 border-gray-400 dark:border-gray-700 rounded-xl relative"
   >
     <div class="flex">
       <img
