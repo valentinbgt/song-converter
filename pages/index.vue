@@ -195,16 +195,13 @@ const platforms = [
 ];
 
 interface DailyTrackResponse {
-  deezer: Track;
-  spotify: Track;
-  applemusic: Track;
-  youtube: Track;
-  youtubemusic: Track;
-  soundcloud: Track;
-  tidal: Track;
-  amazonmusic: Track;
-  napster: Track;
-  originalUrl: string;
+  id: BigInt;
+  displayDate: Date;
+  title: string;
+  artist: string;
+  album: string;
+  url: string;
+  cover: string;
 }
 
 onMounted(() => {
@@ -231,8 +228,17 @@ onMounted(() => {
 
   loading.value = true;
   $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
-    result.value = res;
-    inputPlaceholder.value = res.deezer.url || "Link of your track";
+    let obj: any = {};
+    obj["deezer"] = {
+      title: res.title,
+      artist: res.artist,
+      album: res.album,
+      cover: res.cover,
+      url: res.url,
+    };
+    obj["originalUrl"] = res.url;
+    result.value = obj;
+    inputPlaceholder.value = res.url || "Link of your track";
     loading.value = false;
   });
 });
