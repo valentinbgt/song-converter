@@ -1,5 +1,5 @@
 # Image de Départ
-FROM node:23 AS builder
+FROM node:24 AS builder
 
 # Create and set working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npx prisma generate
 RUN npm run build
 
 
-FROM node:23-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 
