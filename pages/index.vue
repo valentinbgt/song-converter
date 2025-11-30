@@ -3,8 +3,12 @@
     <!--page title-->
     <div>
       <h1 class="text-3xl font-bold w-full text-center">
-        Any music link to your favorite platform
+        Music, never mind your favorite platform
       </h1>
+      <!--       <h2 class="text-xl w-full text-center text-gray-500">
+        The open source & community project when your friends are not on the
+        same platform as you.
+      </h2> -->
     </div>
 
     <UDivider class="my-4" size="sm">
