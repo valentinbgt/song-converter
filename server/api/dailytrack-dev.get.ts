@@ -52,6 +52,14 @@ interface Playlist {
   };
 }
 
+// Helper to convert BigInt fields to Number for JSON serialization
+function serializeTrack(track: any) {
+  return {
+    ...track,
+    id: Number(track.id),
+  };
+}
+
 export default defineEventHandler(async () => {
   //push mock data to test the database for development
 
@@ -60,20 +68,44 @@ export default defineEventHandler(async () => {
   //curent date yyyy-mm-dd format
   const currentDate = new Date().toISOString().split("T")[0];
 
+  //delete mock data
+  await prisma.dailyTracks.deleteMany({
+    where: {
+      id: BigInt(2163366937),
+    },
+  });
+
+  /*   await prisma.dailyTracks.create({
+    data: {
+      id: BigInt(12345678),
+      displayDate: new Date("2025-11-29"),
+      title: "Mock Track Title",
+      artist: "Mock Artist Name",
+      album: "Mock Album Title",
+      url: "https://www.deezer.com/track/12345678",
+      cover: "https://api.deezer.com/cover/12345678.jpg", //mock cover url
+    },
+  }); */
+
   const todayTrack = await prisma.dailyTracks.findUnique({
     where: {
       displayDate: new Date(currentDate),
     },
   });
 
+  //if a track is found for today, return it
   if (todayTrack) {
-    console.log("Today's track already exists in the database.");
-    return;
+    return serializeTrack(todayTrack);
   }
 
-  console.log("No track found for today, proceeding to fetch from Deezer API.");
-
-  console.log("Current date:", currentDate);
+  //get all ids of tracks already in the database
+  const existingTracks = await prisma.dailyTracks.findMany({
+    select: {
+      id: true,
+    },
+  });
+  // Convert BigInt to Number for comparison
+  const existingTrackIds = existingTracks.map((track) => Number(track.id));
 
   try {
     const PLAYLIST_URL = process.env.DEEZER_DAILY_TRACK_PLAYLIST;
@@ -82,7 +114,6 @@ export default defineEventHandler(async () => {
         "DEEZER_DAILY_TRACK_PLAYLIST environment variable is not set"
       );
     }
-    const TRACKS_DATA_PATH = "data/dailytracks.json";
 
     const unshortenedURL = await unshortUrl(PLAYLIST_URL);
     const playlistIdMatch = unshortenedURL.match(/playlist\/(\d+)/);
@@ -105,118 +136,37 @@ export default defineEventHandler(async () => {
 
     const playlistTracks = playlistResponse.tracks.data;
 
-    //ensure the data directory exists
-    await mkdir("data", { recursive: true });
-
-    //read existing tracks from the JSON file or initialize an empty array
-    let tracks: Track[] = [];
-    try {
-      const tracksData = await readFile(TRACKS_DATA_PATH, "utf-8");
-      tracks = tracksData.trim() === "" ? [] : JSON.parse(tracksData);
-    } catch {
-      //if the file doesn't exist, start with an empty array
-      tracks = [];
-    }
-
-    //delete (filter out) tracks that are in the database but not in the fetched playlist.
-    const playlistTrackIds = new Set(playlistTracks.map((track) => track.id));
-    tracks = tracks.filter((track) => playlistTrackIds.has(track.id));
-
-    //add new tracks from the playlist to the database
-    playlistTracks.forEach((newTrack) => {
-      if (!tracks.some((track) => track.id === newTrack.id)) {
-        tracks.push({
-          ...newTrack,
-          used: false,
-          timestamp: 0,
-        });
-      }
-    });
-
-    const now = Date.now();
-
-    //mark tracks as unused if from a previous day
-    tracks.forEach((track) => {
-      if (track.timestamp > 0 && isNewDay(track.timestamp, now)) {
-        track.used = false;
-        track.timestamp = 0;
-      }
-    });
-
-    //identify the current active track (must be from the same day)
-    const activeTrack = tracks.find(
-      (track) =>
-        track.used === false &&
-        track.timestamp > 0 &&
-        !isNewDay(track.timestamp, now)
+    //filter out tracks that are already in the database
+    const newTracks = playlistTracks.filter(
+      (track) => !existingTrackIds.includes(track.id)
     );
 
-    if (activeTrack) {
-      //persist any updates if necessary
-      await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
-      return returnTrack(activeTrack);
-    }
-
-    //filter out tracks that have been used
-    const availableTracks = tracks.filter(
-      (track) => !track.used && track.timestamp === 0
-    );
-
-    if (availableTracks.length === 0) {
-      //persist deletion modifications before returning
-      await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
-      const mostRecent = [...tracks].sort(
-        (a, b) => b.timestamp - a.timestamp
-      )[0];
-      return returnTrack(mostRecent);
-    }
-
-    //select a random track from the available tracks
+    //select a random track from the new tracks
     const selectedTrack =
-      availableTracks[Math.floor(Math.random() * availableTracks.length)];
+      newTracks[Math.floor(Math.random() * newTracks.length)];
 
-    //update the selected track's timestamp to mark it as active
-    selectedTrack.timestamp = now;
+    if (!selectedTrack) {
+      throw new Error("No new tracks available in the playlist.");
+    }
 
-    //persist the updated tracks back to the JSON file
-    await writeFile(TRACKS_DATA_PATH, JSON.stringify(tracks, null, 2));
+    const newTrack = {
+      id: BigInt(selectedTrack.id),
+      displayDate: new Date(currentDate),
+      title: selectedTrack.title,
+      artist: selectedTrack.artist.name,
+      album: selectedTrack.album.title,
+      url: selectedTrack.link,
+      cover: selectedTrack.album.cover_medium,
+    };
 
-    return returnTrack(selectedTrack);
+    //store the selected track in the database
+    await prisma.dailyTracks.create({
+      data: newTrack,
+    });
+
+    return serializeTrack(newTrack);
   } catch (error) {
     console.error("Error in dailytrack.get.ts:", error);
     throw error;
   }
 });
-
-async function returnTrack(track: Track): Promise<{ [key: string]: any }> {
-  let response: { [key: string]: any } = {
-    deezer: {
-      redirectUrl: track.link,
-      title: track.title,
-      artist: track.artist.name,
-      album: track.album.title,
-      cover: track.album.cover_medium,
-      url: track.link,
-      id: track.id,
-      deezerId: track.id,
-    },
-    spotify: {},
-    applemusic: {},
-    youtube: {},
-    youtubemusic: {},
-    soundcloud: {},
-    tidal: {},
-    amazonmusic: {},
-    napster: {},
-    originalUrl: track.link,
-  };
-
-  return response;
-}
-
-// Helper function to check if two timestamps are on different days
-function isNewDay(timestamp1: number, timestamp2: number): boolean {
-  const date1 = new Date(timestamp1);
-  const date2 = new Date(timestamp2);
-  return date1.toDateString() !== date2.toDateString();
-}

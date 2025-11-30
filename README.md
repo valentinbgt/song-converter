@@ -10,3 +10,6 @@ Push the Schema to the Database
 
 ```npx prisma generate```
 Generate the Prisma Client
+
+```npx prisma migrate deploy```
+Update the database in prod

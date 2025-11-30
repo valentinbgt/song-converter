@@ -14,6 +14,11 @@ datasource db {
 }
 
 model DailyTracks {
-  id          Int      @id @unique
+  id          BigInt   @id @unique
   displayDate DateTime @unique
+  title       String
+  artist      String
+  album       String
+  url         String
+  cover       String
 }
