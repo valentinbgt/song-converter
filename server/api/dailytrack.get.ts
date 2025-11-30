@@ -1,4 +1,7 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
+import { useUnshortenURL } from "~/composables/useUnshortenURL";
+
+const { unshortUrl } = useUnshortenURL();
 
 interface Track {
   id: number;
@@ -58,13 +61,7 @@ export default defineEventHandler(async () => {
     }
     const TRACKS_DATA_PATH = "data/dailytracks.json";
 
-    async function unshortenURL(url: string): Promise<string> {
-      const response = await fetch(url, { redirect: "manual" });
-      const location = response.headers.get("location");
-      return location ? location : url;
-    }
-
-    const unshortenedURL = await unshortenURL(PLAYLIST_URL);
+    const unshortenedURL = await unshortUrl(PLAYLIST_URL);
     const playlistIdMatch = unshortenedURL.match(/playlist\/(\d+)/);
     if (!playlistIdMatch) {
       throw new Error("Invalid playlist URL format.");
