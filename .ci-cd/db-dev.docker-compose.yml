@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:17.7-trixie
+    environment:
+      POSTGRES_USER: song_converter
+      POSTGRES_PASSWORD: song_converter_password
+      POSTGRES_DB: song_converter_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - music_anywhere_db_data:/var/lib/postgresql/data
+
+volumes:
+  music_anywhere_db_data:
