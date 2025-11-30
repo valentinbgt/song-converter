@@ -11,6 +11,13 @@
       <span class="flex items-center gap-1">
         This website is still in development
         <UIcon name="ri:error-warning-fill" />
+        Wanna help ?
+        <a
+          href="https://github.com/valentinbgt/song-converter"
+          class="underline"
+          target="_blank"
+          >GitHub</a
+        >
       </span>
     </UDivider>
 
