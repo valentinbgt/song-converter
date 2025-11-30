@@ -1,14 +1,14 @@
 <template>
   <div
     v-if="uniqueKey === target || target === 'all'"
-    class="flex w-fit min-w-[500px] max-w-full border-2 border-gray-400 dark:border-gray-700 rounded-xl relative"
+    class="flex w-fit min-w-[500px] max-w-full border dark:border-gray-400 border-gray-600 rounded-xl relative overflow-hidden"
   >
     <div class="flex">
       <img
         :src="
           track.cover || 'https://cdn-images.dzcdn.net/images/cover/500x500.jpg'
         "
-        class="rounded-lg w-64 h-64"
+        class="w-64 h-64"
       />
       <div class="ml-4 mt-2 mr-4">
         <p class="text-2xl font-bold">

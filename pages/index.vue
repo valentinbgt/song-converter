@@ -108,7 +108,7 @@
     </div>
     <div v-else class="flex justify-center">
       <p
-        class="flex w-[500px] mt-4 mb-8 p-4 border-2 border-gray-400 dark:border-gray-700 rounded-xl"
+        class="flex w-[500px] mt-4 mb-8 p-4 border dark:border-gray-400 border-gray-600 rounded-xl"
       >
         No content to display
       </p>
