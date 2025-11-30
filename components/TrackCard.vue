@@ -58,12 +58,18 @@
   cover: string;
   url: string;
 } */
-const props = defineProps<{
-  track: any;
-  newTab: boolean;
-  uniqueKey: string;
-  target: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    track: any;
+    newTab: boolean;
+    uniqueKey?: string;
+    target?: string;
+  }>(),
+  {
+    uniqueKey: "default",
+    target: "default",
+  }
+);
 
 let audio = ref<HTMLAudioElement | null>(null);
 let audioPlaying = ref(false);

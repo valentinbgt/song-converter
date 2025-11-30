@@ -106,6 +106,12 @@
         :newTab="newTab"
       />
     </div>
+    <div
+      v-else-if="dailyTrack"
+      class="flex flex-wrap justify-center gap-4 mt-4 mb-8"
+    >
+      <TrackCard :track="dailyTrack" :newTab="newTab" />
+    </div>
     <div v-else class="flex justify-center">
       <p
         class="flex w-[500px] mt-4 mb-8 p-4 border dark:border-gray-400 border-gray-600 rounded-xl"
@@ -126,7 +132,9 @@ const redirect = ref(true);
 const convertOnPaste = ref(true);
 const newTab = ref(false);
 const selectedPlatform = ref("deezer");
-const inputPlaceholder = ref("Link of your track");
+const inputPlaceholder = computed(
+  () => dailyTrack.value?.url || "Link of your track"
+);
 const trackOfTheDay = ref(true);
 
 const { unshortUrl } = useUnshortenURL();
@@ -204,6 +212,12 @@ interface DailyTrackResponse {
   cover: string;
 }
 
+const dailyTrack = ref<DailyTrackResponse | null>(null);
+
+$fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
+  dailyTrack.value = res;
+});
+
 onMounted(() => {
   redirect.value = localStorage.getItem("redirect") !== "false";
   convertOnPaste.value = localStorage.getItem("convertOnPaste") !== "false";
@@ -224,22 +238,6 @@ onMounted(() => {
 
   watch(selectedPlatform, (newValue) => {
     localStorage.setItem("selectedPlatform", newValue);
-  });
-
-  loading.value = true;
-  $fetch<DailyTrackResponse>("/api/dailytrack").then((res) => {
-    let obj: any = {};
-    obj["deezer"] = {
-      title: res.title,
-      artist: res.artist,
-      album: res.album,
-      cover: res.cover,
-      url: res.url,
-    };
-    obj["originalUrl"] = res.url;
-    result.value = obj;
-    inputPlaceholder.value = res.url || "Link of your track";
-    loading.value = false;
   });
 });
 
