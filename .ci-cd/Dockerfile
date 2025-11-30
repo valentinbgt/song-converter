@@ -22,8 +22,7 @@ WORKDIR /app
 COPY --from=builder /app/.output /app
 
 # Copy prisma files needed for migrations
-COPY --from=builder /app/node_modules/@prisma /app/node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma /app/node_modules/prisma
+COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/prisma.config.ts /app/prisma.config.ts
 COPY --from=builder /app/generated/prisma /app/generated/prisma
@@ -32,4 +31,4 @@ COPY --from=builder /app/generated/prisma /app/generated/prisma
 EXPOSE 3000
 
 # Start the server
-CMD ["sh", "-c", "npx prisma migrate deploy && node /app/server/index.mjs"]
+CMD ["sh", "-c", "node /app/node_modules/prisma/build/index.js migrate deploy && node /app/server/index.mjs"]
